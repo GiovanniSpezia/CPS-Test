@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Test CPS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <main class="card main-card" aria-labelledby="title">
+            <header>
+                <div>
+                    <h1 id="title">Test CPS</h1>
+                    <div class="sub">Semplice, lineare e ottimizzato per mobile. Premi Space/Enter per cliccare.</div>
+                </div>
+                <div class="controls" aria-hidden="true">
+                    <label for="duration" class="sr-only">Durata del test</label>
+                    <select id="duration" class="small" aria-label="Seleziona la durata">
+                        <option value="5">5s</option>
+                        <option value="10">10s</option>
+                        <option value="15">15s</option>
+                        <option value="30">30s</option>
+                    </select>
+                </div>
+            </header>
+
+            <section id="clickArea" role="button" tabindex="0" aria-pressed="false" aria-live="polite" aria-describedby="displaySub">
+                <div class="big-value" id="displayMain">Premi per iniziare</div>
+                <div class="metric" id="displaySub">Click veloce — tocca lo schermo o premi Space</div>
+            </section>
+
+            <div class="stats-grid" aria-hidden="false">
+                <div class="stat"><div class="label">Tempo rimasto</div><div id="time-remaining" class="value" aria-live="polite">0.00s</div></div>
+                <div class="stat"><div class="label">Click</div><div id="click-count" class="value" aria-live="polite">0</div></div>
+                <div class="stat"><div class="label">CPS</div><div id="cps" class="value" aria-live="polite">0.00</div></div>
+            </div>
+
+            <div class="progress-wrap" aria-hidden="true">
+                <div id="progress" class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+            </div>
+
+            <div class="actions" aria-hidden="false">
+                <button type="button" id="restartButton" class="btn small ghost">Reset</button>
+                <button type="button" id="saveButton" class="btn small ghost">Salva risultato</button>
+                <button type="button" id="leaderboardBtn" class="btn small">Leaderboard</button>
+                <button type="button" id="copyButton" class="btn small primary">Copia risultato</button>
+            </div>
+
+            <div class="note">La miglior prestazione verrà salvata localmente nel tuo browser.</div>
+        </main>
+
+        <aside class="card aside-card" aria-label="Impostazioni e informazioni">
+            <div>
+                <strong>Miglior risultato</strong>
+                <div id="bestBox" class="best-box" aria-live="polite">Nessun record ancora</div>
+            </div>
+            <div>
+                <strong>Note</strong>
+                <div class="sub">Progettato per essere diretto: clicca più velocemente possibile nel tempo scelto. Usa R per resettare.</div>
+            </div>
+        </aside>
+    </div>
+
+    <button id="settingsFab" aria-label="Apri impostazioni" class="btn fab" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" fill="currentColor"/>
+            <path d="M19.14 12.94a7.978 7.978 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.66l-1.92-3.33a.5.5 0 0 0-.61-.22l-2.39.96a7.78 7.78 0 0 0-1.62-.94L14.6 2.6a.5.5 0 0 0-.5-.6h-4.2a.5.5 0 0 0-.5.6l-.36 2.03c-.56.24-1.09.56-1.6.94l-2.38-.96a.5.5 0 0 0-.61.22L1.7 8.82a.5.5 0 0 0 .12.66l2.03 1.58c-.05.31-.08.63-.08.95s.03.64.08.95L1.82 14.9a.5.5 0 0 0-.12.66l1.92 3.33c.14.24.43.34.68.25l2.39-.96c.5.38 1.04.7 1.6.95l.36 2.03c.06.33.35.58.69.58h4.2c.34 0 .63-.25.69-.58l.36-2.03c.58-.24 1.12-.56 1.62-.95l2.39.96c.25.09.54-.01.68-.25l1.92-3.33a.5.5 0 0 0-.12-.66l-2.03-1.58z" fill="currentColor" opacity="0.18"/>
+        </svg>
+    </button>
+
+    <aside id="settingsPanel" class="settings-panel" aria-hidden="true" role="dialog" aria-label="Impostazioni rapide">
+        <header>
+            <strong>Impostazioni</strong>
+            <button id="closeSettings" class="btn small ghost" aria-label="Chiudi impostazioni" type="button">Chiudi</button>
+        </header>
+        <div class="settings-content">
+            <label class="row"><input type="checkbox" id="soundToggle"> <span>Suono click</span></label>
+            <label class="row"><input type="checkbox" id="autosaveToggle" checked> <span>Salva automaticamente</span></label>
+            <label class="row"><input type="checkbox" id="showBestToggle" checked> <span>Mostra record migliore</span></label>
+        </div>
+        <div class="gear" aria-hidden="true" title="Impostazioni">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" fill="currentColor"/>
+                <path d="M19.14 12.94a7.978 7.978 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.66l-1.92-3.33a.5.5 0 0 0-.61-.22l-2.39.96a7.78 7.78 0 0 0-1.62-.94L14.6 2.6a.5.5 0 0 0-.5-.6h-4.2a.5.5 0 0 0-.5.6l-.36 2.03c-.56.24-1.09.56-1.6.94l-2.38-.96a.5.5 0 0 0-.61.22L1.7 8.82a.5.5 0 0 0 .12.66l2.03 1.58c-.05.31-.08.63-.08.95s.03.64.08.95L1.82 14.9a.5.5 0 0 0-.12.66l1.92 3.33c.14.24.43.34.68.25l2.39-.96c.5.38 1.04.7 1.6.95l.36 2.03c.06.33.35.58.69.58h4.2c.34 0 .63-.25.69-.58l.36-2.03c.58-.24 1.12-.56 1.62-.95l2.39.96c.25.09.54-.01.68-.25l1.92-3.33a.5.5 0 0 0-.12-.66l-2.03-1.58z" fill="currentColor" opacity="0.12"/>
+            </svg>
+        </div>
+    </aside>
+
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="dialog" role="document" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <strong id="modalTitle">Leaderboard</strong>
+                <div class="modal-actions">
+                    <button id="deleteAllModal" class="btn small ghost" type="button" title="Elimina tutti i risultati">Elimina tutto</button>
+                    <button id="closeModal" class="btn small" type="button">Chiudi</button>
+                </div>
+            </div>
+            <div id="modalBody">
+                <label for="playerName" class="sr-only">Nome da salvare</label>
+                <div class="modal-input">
+                    <input id="playerName" class="small" placeholder="Il tuo nome (max 12)" maxlength="12" aria-label="Nome da salvare" />
+                    <button id="modalSave" class="btn small primary" type="button">Salva</button>
+                </div>
+                <div class="lead-list" id="leadList" role="list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="dialog" role="document" aria-labelledby="confirmTitle">
+            <div class="modal-header">
+                <strong id="confirmTitle">Conferma eliminazione</strong>
+            </div>
+            <div class="modal-content">
+                <p>Sei sicuro di voler eliminare <strong>tutti</strong> i risultati? Questa operazione può essere annullata per pochi secondi.</p>
+                <div class="modal-actions">
+                    <button id="confirmDeleteAll" class="btn small danger" type="button">Elimina tutto</button>
+                    <button id="cancelDeleteAll" class="btn small ghost" type="button">Annulla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="saveModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="dialog" role="document" aria-labelledby="saveModalTitle">
+            <div class="modal-header">
+                <strong id="saveModalTitle">Salva risultato</strong>
+                <button id="closeSaveModal" class="btn small" type="button">Annulla</button>
+            </div>
+            <div id="saveModalBody">
+                <div class="modal-content">
+                    <div class="result">Risultato: <strong id="saveCps">0.00</strong> CPS — <span id="saveClicks">0</span> click</div>
+                    <label for="saveName" class="sr-only">Nome</label>
+                    <input id="saveName" class="small" placeholder="Inserisci il tuo nome (max 12)" maxlength="12" aria-label="Nome da salvare" />
+                    <div class="modal-actions">
+                        <button id="saveConfirm" class="btn small primary" type="button">Salva</button>
+                        <button id="saveCancel" class="btn small ghost" type="button">Annulla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
